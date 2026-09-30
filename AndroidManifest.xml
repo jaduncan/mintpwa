@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fyi.jad.mintpwa" android:versionCode="1" android:versionName="1.0.0">
+  <uses-sdk android:minSdkVersion="37" android:targetSdkVersion="37"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <!-- Visibility: launchable apps (minted TWAs are launchable) and the minter itself (install source) -->
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.MAIN"/>
+      <category android:name="android.intent.category.LAUNCHER"/>
+    </intent>
+    <package android:name="com.android.webapp.service"/>
+  </queries>
+  <application android:label="Mint PWA" android:icon="@drawable/ic_mint" android:allowBackup="false">
+    <!-- App-drawer entry: list of minted web apps -->
+    <activity android:name=".Apps" android:exported="true" android:label="Mint PWA">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <!-- Share target: mint a web app from a shared page -->
+    <activity android:name=".Main" android:exported="true"
+        android:theme="@android:style/Theme.DeviceDefault.Dialog"
+        android:launchMode="singleTop" android:excludeFromRecents="true"
+        android:taskAffinity="">
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="text/plain"/>
+      </intent-filter>
+      <!-- Required for android.app.role.BROWSER eligibility (the minter's caller gate) -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="http"/>
+        <data android:scheme="https"/>
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>

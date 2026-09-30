@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp"
+    android:viewportWidth="48" android:viewportHeight="48">
+  <path android:fillColor="#1E6B4E" android:pathData="M24,0 A24,24 0 1,1 23.99,0 Z"/>
+  <group android:translateX="-1.6" android:translateY="1.2"><group android:rotation="40" android:pivotX="24" android:pivotY="24">
+    <path android:strokeColor="#D9F7E7" android:strokeWidth="1.8" android:strokeLineCap="round" android:pathData="M24,36 L24,41.2"/>
+    <path android:fillColor="#D9F7E7" android:pathData="M24,8.50 L25.67,9.60 L26.47,12.50 L28.94,13.60 L29.42,16.50 L31.95,17.60 L31.87,20.50 L33.90,21.60 L33.01,24.50 L34.07,25.60 L32.20,28.50 L31.95,29.60 L29.18,32.50 L27.49,33.60 Q25.2,36.10 24,36.80 Q22.8,36.10 20.51,33.60 L18.82,32.50 L16.05,29.60 L15.80,28.50 L13.93,25.60 L14.99,24.50 L14.10,21.60 L16.13,20.50 L16.05,17.60 L18.58,16.50 L19.06,13.60 L21.53,12.50 L22.33,9.60 Z"/>
+    <path android:strokeColor="#1E6B4E" android:strokeWidth="1.3" android:strokeLineCap="round" android:pathData="M24,11.5 L24,38.8"/>
+    <path android:strokeColor="#1E6B4E" android:strokeWidth="1.0" android:strokeLineCap="round" android:pathData="M24,18.54 Q25.91,16.94 27.82,14.74 M24,18.54 Q22.09,16.94 20.18,14.74 M24,23.58 Q26.97,21.98 29.95,19.78 M24,23.58 Q21.03,21.98 18.05,19.78 M24,28.62 Q27.20,27.02 30.41,24.82 M24,28.62 Q20.80,27.02 17.59,24.82"/>
+  </group></group>
+</vector>

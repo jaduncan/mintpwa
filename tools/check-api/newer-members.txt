@@ -1,0 +1,4 @@
+# Members added after the reference android.jar to classes that already existed in it.
+# Each was checked against the published Android API reference. Format: <ref>  # API level
+android/content/pm/PackageManager.getInstallSourceInfo:(Ljava/lang/String;)Landroid/content/pm/InstallSourceInfo;  # 30
+android/view/Window.getInsetsController:()Landroid/view/WindowInsetsController;  # 30

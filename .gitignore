@@ -1,0 +1,8 @@
+# build output
+/build/
+# signing material — never commit
+*.jks
+*.keystore
+*.p12
+*.pass
+*.idsig
