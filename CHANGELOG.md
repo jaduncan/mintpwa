@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- build.sh: support d8 (on PATH or via `R8_JAR`) where `dalvik-exchange` is no longer packaged.
+
 ## 1.0.0 — 2026-09-30
 
 First public release (package `fyi.jad.mintpwa`).

@@ -70,9 +70,11 @@ anywhere else and collects no data. The app list reads your installed packages l
 
 ## Building
 
-No Gradle or Android SDK needed; Debian/Ubuntu packages suffice:
+No Gradle needed. You need a JDK, `aapt`, `zipalign`, `apksigner`, a platform `android.jar`
+(any API level; set `ANDROID_JAR` if it isn't at `/usr/lib/android-sdk/platforms/android-23/`),
+and a dexer: `dalvik-exchange` where your distro still packages it, `d8` from the Android SDK
+build-tools on `PATH`, or `R8_JAR` pointing at `com.android.tools:r8` from Google's Maven repository.
 
-    sudo apt install openjdk-21-jdk-headless dalvik-exchange aapt zipalign apksigner android-sdk-platform-23
     ./build.sh --debug          # throwaway debug key
     ./tools/check-api.sh        # verify every framework call against a real android.jar
 

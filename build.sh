@@ -5,8 +5,11 @@
 #   ./build.sh              release: needs MINTPWA_KEYSTORE, MINTPWA_KEY_ALIAS and
 #                           MINTPWA_KS_PASS (or MINTPWA_KS_PASS_FILE)
 #
-# Requires: sudo apt install openjdk-21-jdk-headless dalvik-exchange aapt zipalign apksigner \
-#                            android-sdk-platform-23
+# Requires: a JDK (javac), aapt, zipalign, apksigner, keytool, a platform android.jar, and a dexer:
+#   - dalvik-exchange (older Debian/Ubuntu), or
+#   - d8 on PATH (Android SDK build-tools), or
+#   - R8_JAR=/path/to/r8.jar (com.android.tools:r8 from Google's Maven repository)
+# Set DEXER=dx|d8|r8jar to force one. Set ANDROID_JAR if yours isn't at the default path.
 #
 # Why API 23's android.jar: aapt only uses it to resolve framework resource/attribute IDs, which are
 # stable across releases. Java sources compile against build-support/stubs (see its README).
@@ -15,8 +18,13 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 ANDROID_JAR=${ANDROID_JAR:-/usr/lib/android-sdk/platforms/android-23/android.jar}
-DEX=${DEX:-dalvik-exchange}
-for t in javac "$DEX" aapt zipalign apksigner keytool; do
+if [ -z "${DEXER:-}" ]; then
+  if command -v dalvik-exchange >/dev/null; then DEXER=dx
+  elif command -v d8 >/dev/null; then DEXER=d8
+  elif [ -n "${R8_JAR:-}" ]; then DEXER=r8jar
+  else echo "no dexer found: install dalvik-exchange, put d8 on PATH, or set R8_JAR=/path/to/r8.jar"; exit 1; fi
+fi
+for t in javac aapt zipalign apksigner keytool; do
   command -v "$t" >/dev/null || { echo "missing tool: $t (see header of $0)"; exit 1; }
 done
 [ -f "$ANDROID_JAR" ] || { echo "missing $ANDROID_JAR (apt install android-sdk-platform-23, or set ANDROID_JAR)"; exit 1; }
@@ -29,8 +37,15 @@ echo "==> compiling stubs + sources"
 javac --release 8 -nowarn -Xlint:none -d "$B/obj/stubs" $(find build-support/stubs -name '*.java')
 javac --release 8 -Xlint:none -cp "$B/obj/stubs" -d "$B/obj/classes" $(find src -name '*.java')
 
-echo "==> dexing (app classes only; stubs are never packaged)"
-"$DEX" --dex --min-sdk-version=26 --output="$B/obj/classes.dex" "$B/obj/classes"
+echo "==> dexing with $DEXER (app classes only; stubs are never packaged)"
+CLASSES=$(find "$B/obj/classes" -name '*.class')
+case "$DEXER" in
+  dx)    dalvik-exchange --dex --min-sdk-version=26 --output="$B/obj/classes.dex" "$B/obj/classes" ;;
+  d8)    d8 --release --min-api 26 --output "$B/obj" $CLASSES ;;
+  r8jar) java -cp "${R8_JAR:?set R8_JAR}" com.android.tools.r8.D8 --release --min-api 26 --output "$B/obj" $CLASSES ;;
+  *)     echo "unknown DEXER=$DEXER (use dx, d8 or r8jar)"; exit 1 ;;
+esac
+[ -f "$B/obj/classes.dex" ] || { echo "dexer produced no classes.dex"; exit 1; }
 
 echo "==> packaging"
 aapt package -f -M AndroidManifest.xml -S res -I "$ANDROID_JAR" -F "$B/obj/unaligned.apk"
